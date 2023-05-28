@@ -1,56 +1,87 @@
-import toml
-import os
-import msvcrt
+import socket
+import subprocess
+import time
+import psutil
 import logging
-from process import check_if_process_running, launch_program
-from connectivity import check_internet_connectivity
+import msvcrt
+import os
+import requests
 
 logging.basicConfig(level=logging.INFO)
 
 
-def load_config(file_path):
-    if not os.path.exists(file_path):
-        # Define default approved programs
-        default_config = {
-            "approved_programs": {
-                # "program_name": "program_path"
-                # example: "Spotify": "C:\\Users\\User\\AppData\\Roaming\\Spotify\\Spotify.exe"
-            }
-        }
-        with open(file_path, 'w') as file:
-            toml.dump(default_config, file)
-            logging.info(
-                f"{file_path} not found. Created default config file.")
-    with open(file_path, 'r') as file:
-        return toml.load(file)
+def check_internet_connectivity(timeout=0.5):
+    # Check if we can ping a known stable server
+    try:
+        socket.setdefaulttimeout(timeout)
+        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect(("1.0.0.1", 53))
+        logging.info("Internet connectivity detected via DNS query to Cloudflare's DNS server.")
+        return True
+    except socket.error:
+        pass
+    # Send a simple HTTP request to a web server
+    try:
+        response = requests.head("http://www.google.com", timeout=timeout)
+        logging.info(f"HTTP response code: {response.status_code}")
+        if 200 <= response.status_code < 400:
+            logging.info("Internet connectivity detected via HTTP request.")
+            return True
+    except (requests.ConnectionError, requests.Timeout, requests.HTTPError):
+        pass
+
+    logging.warning(
+        "No internet connectivity detected. Please connect to the internet and try again.")
+    return False
 
 
-config = load_config('./main/config.toml')
-approved_programs = config['approved_programs']
+def check_if_process_running(process_name):
+    for proc in psutil.process_iter():
+        try:
+            if process_name.lower() in proc.name().lower():
+                return True
+        except psutil.NoSuchProcess:
+            pass
+    return False
+
+
+def launch_program(program_name, program_path):
+    if not check_if_process_running(program_name):
+        try:
+            subprocess.run(program_path, start_new_session=True)
+            logging.info(f"Opening {program_name.capitalize()}")
+            time.sleep(5)
+        except FileNotFoundError:
+            logging.warning(
+                f"{program_name} could not be found. Please check your program path and try again.")
+            return False
+    return True
+
+
+os.environ['DISCORD_PATH'] = 'C:\\Users\\phaib\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe'
+
+approved_programs = {
+    'discord': os.environ['DISCORD_PATH'],
+}
 
 
 def main(programs):
     while True:
-        if not check_internet_connectivity():
-            logging.warning("Press any key to reconnect...")
-            msvcrt.getch()
-            os.system('cls')
-            continue
-
         all_launched = True
-        for program_name, program_path in programs.items():
-            if program_name not in approved_programs:
-                logging.warning(
-                    f"{program_name} is not an approved program and will not be launched.")
-                all_launched = False
-                break
-
-            if not launch_program(program_name, program_path):
-                all_launched = False
-                break
-
-        if all_launched and all(check_if_process_running(program) for program in programs):
+        if check_internet_connectivity():
+            time.sleep(3)
+            for program_name, program_path in programs.items():
+                if program_name in approved_programs:
+                    if not launch_program(program_name, program_path):
+                        all_launched = False
+                        break
+                else:
+                    logging.warning(
+                        f"{program_name} is not an approved program and will not be launched.")
+        if all_launched and check_if_process_running("discord") and check_if_process_running('line'):
             break
+        logging.warning("Press any key to reconnect...")
+        msvcrt.getch()
+        os.system('cls')
 
 
 if __name__ == '__main__':
