@@ -16,11 +16,12 @@ Python script designed to automatically launch a set of programs when internet c
    `git clone https://github.com/ExitedState/AutoStartProgram.git`
 4. CD to project directory:
    `cd AutoStartProgram`
-5. Create and configure the programs you want to launch in the `config.toml` file. Here's an example:
+5. Configure the programs you want to launch in the code line 60-64. Here's an example:
 
-   ```toml
-   [approved_programs]
-   discord = "C:\\Users\\user\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe"
+   ```py
+   os.environ['DISCORD_PATH'] = 'C:\\Users\\phaib\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe'
+   approved_programs = {
+   'discord': os.environ['DISCORD_PATH'],}
    ```
 
 6. Run `main.py` script:
@@ -30,3 +31,4 @@ Python script designed to automatically launch a set of programs when internet c
 ### Notes 📝
 
 > This script was designed for Windows. Some features may not work on other OS.<br>
+> You can create an executable for windows use pyinstaller `pyinstaller --onefile filename.py` and place in `shell:startup`
