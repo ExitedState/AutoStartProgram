@@ -66,23 +66,26 @@ approved_programs = {
 
 def main(programs):
     while True:
-        all_launched = True
-        if check_internet_connectivity():
-            time.sleep(3)
-            for program_name, program_path in programs.items():
-                if program_name in approved_programs:
-                    if not launch_program(program_name, program_path):
-                        all_launched = False
-                        break
-                else:
-                    logging.warning(
-                        f"{program_name} is not an approved program and will not be launched.")
-        if all_launched and check_if_process_running("discord") and check_if_process_running('line'):
-            break
-        logging.warning("Press any key to reconnect...")
-        msvcrt.getch()
-        os.system('cls')
+        if not check_internet_connectivity():
+            logging.warning("Press any key to reconnect...")
+            msvcrt.getch()
+            os.system('cls')
+            continue
 
+        all_launched = True
+        for program_name, program_path in programs.items():
+            if program_name not in approved_programs:
+                logging.warning(
+                    f"{program_name} is not an approved program and will not be launched.")
+                all_launched = False
+                break
+
+            if not launch_program(program_name, program_path):
+                all_launched = False
+                break
+
+        if all_launched and all(check_if_process_running(program) for program in programs):
+            break
 
 if __name__ == '__main__':
     main(approved_programs)
