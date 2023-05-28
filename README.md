@@ -1,6 +1,6 @@
 # Automated Program Launcher 🚀
 
-Python script designed to automatically launch a set of programs when internet connectivity is detected. 📡
+Python script designed to automatically launch a set of programs when internet connectivity is detected. (for windows)
 
 ## Features 🌟
 
@@ -30,4 +30,4 @@ Python script designed to automatically launch a set of programs when internet c
 ### Notes 📝
 
 > This script was designed for Windows. Some features may not work on other OS.<br>
-> You can create an executable and auto-start on Windows startup
+> You can create an executable for windows use pyinstaller `pyinstaller filename.py --onefile --windowed` and place in `shell:startup`
