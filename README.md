@@ -30,4 +30,4 @@ Python script designed to automatically launch a set of programs when internet c
 ### Notes 📝
 
 > This script was designed for Windows. Some features may not work on other OS.<br>
-> You can create an executable for windows use pyinstaller `pyinstaller filename.py --onefile --windowed` and place in `shell:startup`
+> You can create an executable for windows (cd to main) use pyinstaller `pyinstaller --onefile main.py` and place in `shell:startup`
