@@ -5,7 +5,6 @@ Python script designed to automatically launch a set of programs when internet c
 ## Features 🌟
 
 - Automatically launch programs when internet connectivity is available
-- The programs to be launched are easily configurable through a TOML configuration file
 - The script continuously checks for internet connectivity and will attempt to launch the programs as soon as connectivity is restored
 
 ### Usage 💻
@@ -26,7 +25,7 @@ Python script designed to automatically launch a set of programs when internet c
 
 6. Run `main.py` script:
    `python ./main/main.py`
-   The script will check for internet connectivity, and will launch the programs in the `config.toml` file as soon as internet connectivity is detected.
+   The script will check for internet connectivity, and will launch the programs as soon as internet connectivity is detected.
 
 ### Notes 📝
 
