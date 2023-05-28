@@ -1,21 +1,31 @@
-### About this code
-This Python script checks for internet connectivity and launches Discord and LINE if they are not already running.
+## Automated Program Launcher 🚀
 
-The script begins by importing several libraries, including:
-* `socket`
-* `subprocess`
-* `time`
-* `psutil`
-* `logging`
-* `msvcrt`
-* `os`
-* `requests`
+Python script designed to automatically launch a set of programs when internet connectivity is detected. 📡
 
-The `logging` library is used to log messages to the console at different levels (e.g., `INFO`, `WARNING`). The `msvcrt` library is used to pause the program and wait for user input.
+### Features 🌟
 
-### Warnings
+- Automatically launch programs when internet connectivity is available
+- The programs to be launched are easily configurable through a TOML configuration file
+- The script continuously checks for internet connectivity and will attempt to launch the programs as soon as connectivity is restored
 
-There are a few potential warnings to consider when using this code:
+### Usage 💻
 
-1. The script relies on the environment variables `DISCORD_PATH` and `LINE_PATH` being set to the correct paths of Discord and LINE, respectively. If these variables are not set or are set to the wrong paths, the script will not be able to launch the programs.
-2. The script enters an infinite loop and continually prompts the user to press any key to reconnect if internet connectivity is not detected. This can be frustrating for the user if they are unable to connect to the internet. It may be advisable to add a limit to the number of times the user is prompted to reconnect before the script exits.
+1. Ensure you have Python 3.6 or higher installed on your system.
+2. Install necessary Python libraries
+3. Clone this repository:
+    `git clone https://github.com/ExitedState/AutoStartProgram.git`
+4. CD to project directory:
+    `cd AutoStartProgram`
+5. Create and configure the programs you want to launch in the `config.toml` file. Here's an example: 
+    ```toml
+    [approved_programs]
+    discord = "C:\\Users\\user\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe"
+    ```
+6. Run `main.py` script:
+    `python ./main/main.py`
+    The script will check for internet connectivity, and will launch the programs in the `config.toml` file as soon as internet connectivity is detected.
+
+#### Notes 📝
+
+> This script was designed for Windows. Some features may not work on other OS.<br>
+> You can create an executable and auto-start on Windows startup
