@@ -1,61 +1,11 @@
-import socket
-import subprocess
-import time
-import psutil
-import logging
-import msvcrt
 import os
-import requests
+import msvcrt
+import logging
+import time
+from process import check_if_process_running, launch_program
+from connectivity import check_internet_connectivity
 
 logging.basicConfig(level=logging.INFO)
-
-
-def check_internet_connectivity(timeout=0.5):
-    # Check if we can ping a known stable server
-    try:
-        socket.setdefaulttimeout(timeout)
-        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect(("1.0.0.1", 53))
-        logging.info("Internet connectivity detected via DNS query to Cloudflare's DNS server.")
-        return True
-    except socket.error:
-        pass
-    # Send a simple HTTP request to a web server
-    try:
-        response = requests.head("http://www.google.com", timeout=timeout)
-        logging.info(f"HTTP response code: {response.status_code}")
-        if 200 <= response.status_code < 400:
-            logging.info("Internet connectivity detected via HTTP request.")
-            return True
-    except (requests.ConnectionError, requests.Timeout, requests.HTTPError):
-        pass
-
-    logging.warning(
-        "No internet connectivity detected. Please connect to the internet and try again.")
-    return False
-
-
-def check_if_process_running(process_name):
-    for proc in psutil.process_iter():
-        try:
-            if process_name.lower() in proc.name().lower():
-                return True
-        except psutil.NoSuchProcess:
-            pass
-    return False
-
-
-def launch_program(program_name, program_path):
-    if not check_if_process_running(program_name):
-        try:
-            subprocess.run(program_path, start_new_session=True)
-            logging.info(f"Opening {program_name.capitalize()}")
-            time.sleep(5)
-        except FileNotFoundError:
-            logging.warning(
-                f"{program_name} could not be found. Please check your program path and try again.")
-            return False
-    return True
-
 
 os.environ['DISCORD_PATH'] = 'C:\\Users\\phaib\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe'
 os.environ['LINE_PATH'] = 'C:\\Users\\phaib\\AppData\\Local\\LINE\\bin\\LineLauncher.exe'
@@ -64,7 +14,6 @@ approved_programs = {
     'discord': os.environ['DISCORD_PATH'],
     'line': os.environ['LINE_PATH']
 }
-
 
 def main(programs):
     while True:
