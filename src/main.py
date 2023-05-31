@@ -1,36 +1,28 @@
 import socket
 import subprocess
-import time
 import psutil
-import logging
 import msvcrt
 import os
-import requests
-
-logging.basicConfig(level=logging.INFO)
-
 
 def check_internet_connectivity(timeout=0.5):
     # Check if we can ping a known stable server
     try:
         socket.setdefaulttimeout(timeout)
         socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect(("1.0.0.1", 53))
-        logging.info("Internet connectivity detected via DNS query to Cloudflare's DNS server.")
+        print("Internet connectivity detected via DNS query to Cloudflare's DNS server.")
         return True
     except socket.error:
         pass
     # Send a simple HTTP request to a web server
     try:
-        response = requests.head("http://www.google.com", timeout=timeout)
-        logging.info(f"HTTP response code: {response.status_code}")
-        if 200 <= response.status_code < 400:
-            logging.info("Internet connectivity detected via HTTP request.")
-            return True
-    except (requests.ConnectionError, requests.Timeout, requests.HTTPError):
+        socket.setdefaulttimeout(timeout)
+        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect(("8.8.8.8", 53))
+        print("Internet connectivity detected via DNS query to Google's DNS server.")
+        return True
+    except socket.error:
         pass
 
-    logging.warning(
-        "No internet connectivity detected. Please connect to the internet and try again.")
+    print("No internet connectivity detected. Please connect to the internet and try again.")
     return False
 
 
@@ -48,10 +40,9 @@ def launch_program(program_name, program_path):
     if not check_if_process_running(program_name):
         try:
             subprocess.run(program_path, start_new_session=True)
-            logging.info(f"Opening {program_name.capitalize()}")
-            time.sleep(5)
+            print(f"Opening {program_name.capitalize()}")
         except FileNotFoundError:
-            logging.warning(
+            print(
                 f"{program_name} could not be found. Please check your program path and try again.")
             return False
     return True
@@ -67,7 +58,7 @@ approved_programs = {
 def main(programs):
     while True:
         if not check_internet_connectivity():
-            logging.warning("Press any key to reconnect...")
+            print("Press any key to reconnect...")
             msvcrt.getch()
             os.system('cls')
             continue
@@ -75,8 +66,7 @@ def main(programs):
         all_launched = True
         for program_name, program_path in programs.items():
             if program_name not in approved_programs:
-                logging.warning(
-                    f"{program_name} is not an approved program and will not be launched.")
+                print(f"{program_name} is not an approved program and will not be launched.")
                 all_launched = False
                 break
 
