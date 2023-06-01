@@ -18,7 +18,7 @@ Python script designed to automatically launch a set of programs when internet c
 5. Configure the programs you want to launch in the code line 60-64. Here's an example:
 
    ```py
-   os.environ['DISCORD_PATH'] = 'C:\\Users\\phaib\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe'
+   os.environ['DISCORD_PATH'] = 'C:\\Users\\User\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe'
    approved_programs = {
    'discord': os.environ['DISCORD_PATH'],}
    ```
@@ -29,9 +29,10 @@ Python script designed to automatically launch a set of programs when internet c
 
 ### Notes
 
-> This script was designed for Windows. Some features may not work on other OS.<br>
+> This script was designed for Windows. Some features may not work on other OS.
+>
 > You can create an executable for windows use pyinstaller `pyinstaller --onefile filename.py` and place in `shell:startup`
 
 #### Preview
-![image](https://github.com/ExitedState/AutoStartProgram/assets/67526393/28fdc989-9653-4ce6-b9a7-c581df512952)
 
+![image](https://github.com/ExitedState/AutoStartProgram/assets/67526393/28fdc989-9653-4ce6-b9a7-c581df512952)
