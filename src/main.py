@@ -50,7 +50,7 @@ def launch_program(program_name, program_path):
 
 
 os.environ['DISCORD_PATH'] = 'C:\\Users\\User\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe'
-os.environ['LINE_PATH'] = 'C:\\Users\\phaib\\AppData\\Local\\LINE\\bin\\LineLauncher.exe'
+os.environ['LINE_PATH'] = 'C:\\Users\\User\\AppData\\Local\\LINE\\bin\\LineLauncher.exe'
 
 approved_programs = {
     'discord': os.environ['DISCORD_PATH'],
