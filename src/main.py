@@ -3,6 +3,7 @@ import subprocess
 import psutil
 import msvcrt
 import os
+import ctypes
 
 def check_internet_connectivity(timeout=0.5):
     # Check if we can ping a known stable server
@@ -49,10 +50,17 @@ def launch_program(program_name, program_path):
 
 
 os.environ['DISCORD_PATH'] = 'C:\\Users\\User\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe'
+os.environ['LINE_PATH'] = 'C:\\Users\\phaib\\AppData\\Local\\LINE\\bin\\LineLauncher.exe'
 
 approved_programs = {
     'discord': os.environ['DISCORD_PATH'],
+    'line': os.environ['LINE_PATH']
 }
+
+def hide_terminal_window():
+    whnd = ctypes.windll.kernel32.GetConsoleWindow()
+    if whnd != 0:
+        ctypes.windll.user32.ShowWindow(whnd, 0)
 
 
 def main(programs):
@@ -62,6 +70,8 @@ def main(programs):
             msvcrt.getch()
             os.system('cls')
             continue
+        else:
+            hide_terminal_window()
 
         all_launched = True
         for program_name, program_path in programs.items():
